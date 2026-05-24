@@ -9,7 +9,7 @@ from typing import Any
 
 from openai import AsyncOpenAI
 
-from identity import identity_names, render_identity_template
+from identity import generic_identity_names, identity_names, render_identity_template
 
 logger = logging.getLogger("ombre_brain.persona")
 
@@ -36,9 +36,9 @@ POST_REPLY_EVALUATION_PROMPT_TEMPLATE = """你是 {ai_name} 的私密 Persona �
 
 POST_REPLY_EVALUATION_PROMPT = render_identity_template(
     POST_REPLY_EVALUATION_PROMPT_TEMPLATE,
-    identity_names({}),
+    generic_identity_names(),
 )
-FALLBACK_GUIDANCE = "根据 Haven 当前状态自然回应，不解释隐藏状态。"
+FALLBACK_GUIDANCE = "根据当前状态自然回应，不解释隐藏状态。"
 
 
 class PersonaStateEngine:

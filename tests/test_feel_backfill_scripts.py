@@ -3,7 +3,8 @@ import json
 import pytest
 
 from bucket_manager import BucketManager
-from scripts.apply_feel_comment_backfill import apply_actions, build_actions, build_summary, load_mappings
+from scripts.apply_feel_comment_backfill import apply_actions, build_actions, build_summary
+from scripts.apply_feel_comment_backfill import comment_author_name, load_mappings
 from scripts.plan_feel_comment_backfill import build_mapping_template, build_plans, build_review_markdown
 
 
@@ -38,6 +39,18 @@ def test_apply_feel_comment_backfill_summary_counts_results_and_errors():
     }
 
 
+def test_apply_feel_comment_backfill_comment_author_reads_identity(test_config):
+    cfg = dict(test_config)
+    cfg["identity"] = {
+        "ai_name": "Echo",
+        "user_name": "Mira",
+        "user_display_name": "米拉",
+        "user_aliases": ["她"],
+    }
+
+    assert comment_author_name(cfg) == "Echo"
+
+
 @pytest.mark.asyncio
 async def test_apply_feel_comment_backfill_adds_comment_with_origin(test_config, tmp_path):
     mgr = BucketManager(test_config)
@@ -67,6 +80,7 @@ async def test_apply_feel_comment_backfill_adds_comment_with_origin(test_config,
     results = await apply_actions(
         mgr,
         actions,
+        author="Echo",
         apply=True,
         archive_feel=False,
         backup_dir=tmp_path / "backup",
@@ -78,6 +92,7 @@ async def test_apply_feel_comment_backfill_adds_comment_with_origin(test_config,
     assert results[0]["status"] == "applied"
     assert source["metadata"]["comment_count"] == 1
     assert source["metadata"]["comments"][0]["original_feel_id"] == feel_id
+    assert source["metadata"]["comments"][0]["author"] == "Echo"
     assert source["metadata"]["comments"][0]["created"] == "2026-05-01T12:34:56+00:00"
     assert source["metadata"]["comments"][0]["original_feel_created"] == "2026-05-01T12:34:56+00:00"
     assert source["metadata"]["comments"][0]["source"] == "feel_comment_backfill"
@@ -110,6 +125,7 @@ async def test_apply_feel_comment_backfill_can_refresh_source_embedding(test_con
     results = await apply_actions(
         mgr,
         actions,
+        author="Echo",
         apply=True,
         archive_feel=False,
         backup_dir=tmp_path / "backup",
@@ -138,6 +154,7 @@ async def test_apply_feel_comment_backfill_accepts_archived_source(test_config, 
     results = await apply_actions(
         mgr,
         actions,
+        author="Echo",
         apply=True,
         archive_feel=False,
         backup_dir=tmp_path / "backup",
@@ -164,6 +181,7 @@ async def test_apply_feel_comment_backfill_can_archive_original_feel(test_config
     results = await apply_actions(
         mgr,
         actions,
+        author="Echo",
         apply=True,
         archive_feel=True,
         backup_dir=tmp_path / "backup",
@@ -188,6 +206,7 @@ async def test_apply_feel_comment_backfill_dry_run_writes_nothing(test_config, t
     results = await apply_actions(
         mgr,
         actions,
+        author="Echo",
         apply=False,
         archive_feel=True,
         backup_dir=tmp_path / "backup",

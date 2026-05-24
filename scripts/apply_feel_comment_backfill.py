@@ -12,6 +12,7 @@ sys.path.insert(0, str(ROOT))
 
 from bucket_manager import BucketManager
 from embedding_engine import EmbeddingEngine
+from identity import identity_names
 from utils import load_config, strip_wikilinks
 
 
@@ -74,6 +75,10 @@ def bucket_text_for_embedding(bucket: dict) -> str:
             if isinstance(comment, dict)
         )
     return f"{strip_wikilinks(bucket.get('content', '')).strip()}\n{comment_text}".strip()
+
+
+def comment_author_name(config: dict) -> str:
+    return identity_names(config)["ai_name"]
 
 
 def build_summary(
@@ -176,6 +181,7 @@ async def apply_actions(
     mgr: BucketManager,
     actions: list[dict],
     *,
+    author: str,
     apply: bool,
     archive_feel: bool,
     backup_dir: Path,
@@ -202,7 +208,7 @@ async def apply_actions(
         entry = await mgr.add_comment(
             action["source_bucket_id"],
             action["content"],
-            author="Haven",
+            author=author,
             kind="feel",
             valence=action.get("valence"),
             arousal=action.get("arousal"),
@@ -278,11 +284,13 @@ async def main() -> None:
     mappings = load_mappings(args.mapping)
     actions, errors = await build_actions(mgr, mappings)
     embedding_engine = EmbeddingEngine(config) if args.refresh_embeddings else None
+    author = comment_author_name(config)
 
     backup_dir = Path(args.backup_dir) if args.backup_dir else Path(config.get("state_dir", "state")) / "backups" / f"feel_comment_backfill_{utc_stamp()}"
     results = await apply_actions(
         mgr,
         actions,
+        author=author,
         apply=args.apply,
         archive_feel=args.archive_feel,
         backup_dir=backup_dir,
@@ -296,6 +304,7 @@ async def main() -> None:
                 "mode": "apply" if args.apply else "dry_run",
                 "buckets_dir": config["buckets_dir"],
                 "backup_dir": str(backup_dir) if args.apply else None,
+                "comment_author": author,
                 "summary": build_summary(
                     results,
                     errors,

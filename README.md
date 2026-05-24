@@ -104,7 +104,8 @@ memory_edges.jsonl  # 显式记忆关系边
 | 原版 Docker Hub 镜像 | 不包含本 fork 的 Gateway、Persona、Relationship Weather、年轮、whisper 和 Supabase 脚本 |
 | 原版 quick start | 只启动 MCP server，不会启动 Gateway，也不会分离 state 目录 |
 | `identity` 名字配置 | `identity.ai_name / user_name / user_display_name / user_aliases` 会影响 prompt、MCP 年轮作者、Dashboard 年轮作者 |
-| `persona.profile_id` | 默认是 `haven_xiaoyu`，通用部署应改成自己的稳定 id |
+| `gateway.default_session_id` | 只有兼容路由缺少 `X-Ombre-Session-Id` 时才使用；通用部署建议改成自己的默认房间名 |
+| `persona.profile_id` | 配置示例里是 `haven_xiaoyu`，通用部署应改成自己的稳定 id |
 | `X-Ombre-Session-Id` | 这是本 fork 自定义的 Gateway session，不是 OpenAI 标准头 |
 | 数据目录 | `buckets` 与 `state` 都要持久化；`state` 不要放进任何双向同步目录 |
 | Supabase | 不需要就先关掉；需要时先建表、RPC、cron 和 tombstone 策略 |
@@ -153,9 +154,9 @@ cp config.example.yaml /srv/ombre-brain/config.yaml
 编辑 `/srv/ombre-brain/config.yaml`：
 
 - `gateway.upstreams`：配置上游 OpenAI-compatible provider。
-- `gateway.default_session_id`：少数兼容路由没传 `X-Ombre-Session-Id` 时的默认房间名。
+- `gateway.default_session_id`：少数兼容路由没传 `X-Ombre-Session-Id` 时的默认房间名，通用部署不要照抄旧示例名。
 - `identity.*`：改 AI 名、前端用户作者名、prompt 里的用户称呼和亲密称呼。
-- `persona.profile_id`：改成自己的稳定 id。
+- `persona.profile_id`：改成自己的稳定 id，避免和示例部署共用同一份 Persona 状态身份。
 - `persona.*`：改成自己的 Persona 模型和关系默认值。
 - `reflection.timezone`：默认 `Asia/Shanghai`。
 - `reflection.diary_mcp_url` / `diary_mcp_token_env`：只有接 Haven-diary/RiJi 时再启用；不使用日记系统就留空，并关闭 `reflection.diary_memory_extract_enabled`。

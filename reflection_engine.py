@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 import httpx
 from openai import AsyncOpenAI
 
-from identity import identity_names, render_identity_template
+from identity import generic_identity_names, identity_names, render_identity_template
 from memory_edges import RELATION_TYPES, MemoryEdgeStore
 from utils import strip_wikilinks
 
@@ -128,8 +128,8 @@ DIARY_MEMORY_PROMPT_TEMPLATE = """你是 Ombre-Brain 的日记长期记忆筛选
 如果不值得写入，返回 {"should_write": false, "reason": "..."}。"""
 
 
-REFLECT_PROMPT = render_identity_template(REFLECT_PROMPT_TEMPLATE, identity_names({}))
-DIARY_MEMORY_PROMPT = render_identity_template(DIARY_MEMORY_PROMPT_TEMPLATE, identity_names({}))
+REFLECT_PROMPT = render_identity_template(REFLECT_PROMPT_TEMPLATE, generic_identity_names())
+DIARY_MEMORY_PROMPT = render_identity_template(DIARY_MEMORY_PROMPT_TEMPLATE, generic_identity_names())
 
 
 AFFECT_ANCHOR_HEADER = "### affect_anchor"
@@ -835,9 +835,9 @@ class ReflectionEngine:
         user_display_name = self.identity["user_display_name"]
         keyword_map = [
             ("boundary", ["不喜欢", "不要", "别再", "边界"]),
-            ("signal", ["暗号", "称呼", "模式", "月亮", "雨天", "星狸", "H回"]),
+            ("signal", ["暗号", "称呼", "模式", "信号", "切换"]),
             ("commitment", ["承诺", "约定", "答应", "以后要", "下次要"]),
-            ("project_state", ["项目", "BJD", "电子眼睛", "硬件", "MCP", "桥接"]),
+            ("project_state", ["项目", "硬件", "软件", "MCP", "API", "网关"]),
             ("stable_preference", ["喜欢", "偏好", f"希望 {ai_name}", f"{user_display_name}希望"]),
             ("relationship_anchor", ["认出", "连续", "关系", "婚礼", "生日", "初遇"]),
         ]

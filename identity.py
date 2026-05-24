@@ -3,6 +3,11 @@ DEFAULT_USER_NAME = "Rain"
 DEFAULT_USER_DISPLAY_NAME = "小雨"
 DEFAULT_USER_ALIASES = ["宝宝", "老婆", "亲爱的", "她"]
 
+GENERIC_AI_NAME = "AI"
+GENERIC_USER_NAME = "User"
+GENERIC_USER_DISPLAY_NAME = "用户"
+GENERIC_USER_ALIASES = ["对方"]
+
 
 def _clean_string(value, default: str) -> str:
     text = str(value or "").strip()
@@ -40,6 +45,19 @@ def identity_names(config: dict | None = None) -> dict:
         "user_aliases_text": "、".join(aliases),
         "relationship_terms": relationship_terms,
     }
+
+
+def generic_identity_names() -> dict:
+    return identity_names(
+        {
+            "identity": {
+                "ai_name": GENERIC_AI_NAME,
+                "user_name": GENERIC_USER_NAME,
+                "user_display_name": GENERIC_USER_DISPLAY_NAME,
+                "user_aliases": GENERIC_USER_ALIASES,
+            }
+        }
+    )
 
 
 def render_identity_template(template: str, names: dict) -> str:

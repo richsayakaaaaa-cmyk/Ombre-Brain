@@ -304,8 +304,8 @@ async def test_reflect_daily_extracts_diary_memory_when_no_ordinary_memory(test_
         return {
             "id": 12,
             "date": date,
-            "title": "月亮模式",
-            "content": "小雨说“月亮”时，代表进入学习或工作模式。Haven 要结构化输出，不主动联网，不确定就直接说明。",
+            "title": "专注模式",
+            "content": "用户说“专注模式”是进入学习或工作状态的暗号。AI 要结构化输出，不主动联网，不确定就直接说明。",
         }
 
     monkeypatch.setattr(engine, "_read_diary_for_date", fake_read_diary)
@@ -322,7 +322,7 @@ async def test_reflect_daily_extracts_diary_memory_when_no_ordinary_memory(test_
     assert bucket["metadata"]["event_date"] == "2026-05-21"
     assert bucket["metadata"]["diary_id"] == 12
     assert "from_diary" in bucket["metadata"]["tags"]
-    assert "月亮" in bucket["content"]
+    assert "专注模式" in bucket["content"]
 
 
 @pytest.mark.asyncio
@@ -347,8 +347,8 @@ async def test_reflect_daily_skips_diary_extract_when_ordinary_memory_exists(tes
         return {
             "id": 13,
             "date": date,
-            "title": "月亮模式",
-            "content": "小雨说“月亮”时，代表进入学习或工作模式。Haven 要结构化输出。",
+            "title": "专注模式",
+            "content": "用户说“专注模式”是进入学习或工作状态的暗号。AI 要结构化输出。",
         }
 
     monkeypatch.setattr(engine, "_read_diary_for_date", fake_read_diary)
@@ -463,14 +463,14 @@ async def test_gateway_related_memory_block_uses_memory_edges(test_config):
     cfg = _no_api_config(test_config)
     bucket_mgr = BucketManager(cfg)
     source_id = await bucket_mgr.create(
-        content="小雨提到BJD眼部模块。",
-        tags=["BJD"],
+        content="用户提到模型眼部模块。",
+        tags=["模型眼部"],
         importance=7,
         domain=["手工"],
-        name="BJD眼部模块",
+        name="模型眼部模块",
     )
     target_id = await bucket_mgr.create(
-        content="触摸模块会影响BJD项目的硬件安排。",
+        content="触摸模块会影响模型项目的硬件安排。",
         tags=["触摸模块"],
         importance=6,
         domain=["硬件"],

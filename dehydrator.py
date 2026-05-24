@@ -33,7 +33,7 @@ from typing import Any
 
 from openai import AsyncOpenAI
 
-from identity import identity_names, render_identity_template
+from identity import generic_identity_names, identity_names, render_identity_template
 from utils import count_tokens_approx
 
 logger = logging.getLogger("ombre_brain.dehydrator")
@@ -108,7 +108,7 @@ importance: 1-10，根据内容重要程度判断
 valence: 0~1（0=消极, 0.5=中性, 1=积极）
 arousal: 0~1（0=平静, 0.5=普通, 1=激动）"""
 
-DIGEST_PROMPT = render_identity_template(DIGEST_PROMPT_TEMPLATE, identity_names({}))
+DIGEST_PROMPT = render_identity_template(DIGEST_PROMPT_TEMPLATE, generic_identity_names())
 
 
 # --- Merge prompt: instruct LLM to blend old and new memories ---

@@ -1530,7 +1530,6 @@ class GatewayService:
         direct_phrases = [
             "favorite memory",
             "favorite memories",
-            "haven favorite",
             f"{ai_name} favorite" if ai_name else "",
             "偏爱的记忆",
             "喜欢的记忆",
