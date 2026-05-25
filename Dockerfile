@@ -1,34 +1,34 @@
 # ============================================================
-# Ombre Brain Docker Build
-# Docker 构建文件
-#
-# Build: docker build -t ombre-brain .
-# Run:   docker run -e OMBRE_API_KEY=your-key -p 8000:8000 ombre-brain
+# Ombre Brain + Gateway Docker Build (合并版)
+# 同时运行 MCP Server (端口8000) 和 Gateway (端口8010)
+# Zeabur 暴露 8010 端口给 Gateway
 # ============================================================
 
 FROM python:3.12-slim
 
 WORKDIR /app
 
-# Install dependencies first (leverage Docker cache)
-# 先装依赖（利用 Docker 缓存）
+# Install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project files / 复制项目文件
+# Copy project files
 COPY *.py .
 COPY dashboard.html .
 COPY config.example.yaml ./config.yaml
 
-# Persistent mount point: bucket data
-# 持久化挂载点：记忆数据
-VOLUME ["/app/buckets"]
+# Persistent mount points
+VOLUME ["/app/buckets", "/app/state"]
 
-# Default to streamable-http for container (remote access)
-# 容器场景默认用 streamable-http
+# Environment defaults
 ENV OMBRE_TRANSPORT=streamable-http
 ENV OMBRE_BUCKETS_DIR=/app/buckets
+ENV OMBRE_STATE_DIR=/app/state
 
-EXPOSE 8000
+# Expose Gateway port (Zeabur maps this)
+EXPOSE 8010
 
-CMD ["python", "server.py"]
+# Start script: run MCP server in background, Gateway in foreground
+COPY start.sh .
+RUN chmod +x start.sh
+CMD ["./start.sh"]
