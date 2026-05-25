@@ -234,7 +234,7 @@ class GatewayService:
 
         session_id = (request.headers.get("X-Ombre-Session-Id") or "").strip()
         if not session_id:
-            session_id = self.gw_cfg.get("default_session_id", "main")
+            session_id = self.gateway_cfg.get("default_session_id", "main")
 
         try:
             payload = await request.json()
