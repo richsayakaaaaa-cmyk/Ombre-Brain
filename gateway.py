@@ -233,7 +233,7 @@ class GatewayService:
             return auth_result
 
         session_id = (request.headers.get("X-Ombre-Session-Id") or "").strip()
-                if not session_id:
+        if not session_id:
             session_id = self.gw_cfg.get("default_session_id", "main")
 
         try:
