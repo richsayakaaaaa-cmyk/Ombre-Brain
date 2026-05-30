@@ -59,7 +59,7 @@ gateway:
     - name: "jiushi"
       base_url: "https://api.jiushi.xin/v1"
       api_key_env: "OMBRE_GATEWAY_JIUSHI_API_KEY"
-      default_model: "[AG2]claude-opus-4-6-thinking"
+      default_model: "[k]claude-opus-4-6-thinking"
       models:
         - "[AG1]claude-opus-4-6-thinking"
         - "[AG2]claude-opus-4-6"
@@ -71,17 +71,25 @@ gateway:
     - name: "zhiyun"
       base_url: "https://zhiyunapi.cc/v1"
       api_key_env: "OMBRE_GATEWAY_ZHIYUN_API_KEY"
-      default_model: "[按次Z]claude-opus-4-6"
+      default_model: "[kiro]claude-opus-4-6"
       models:
-        - "[按次-cc]claude-opus-4-6-thinking"
-        - "[按次-cc]claude-opus-4-7-thinking"
+        - "[kiro]claude-opus-4-5-20251101"
+        - "[kiro]claude-opus-4-6"
+        - "[kiro]claude-opus-4-7"
+        - "[kiro]claude-opus-4-8"
+        - "[windsurf]claude-opus-4-6"
+        - "[windsurf]claude-opus-4-7"
+        - "[windsurf]claude-opus-4-8"
         - "[按次A]claude-opus-4-6-thinking"
-        - "[按次B]claude-opus-4-6-thinking"
-        - "[按次D]claude-opus-4-6-thinking"
-        - "[按次Z]claude-opus-4-6"
         - "claude-opus-4-6-thinking"
-        - "假流式/claude-opus-4-6-thinking"
-        - "流式抗截断/claude-opus-4-6-thinking"
+    - name: "ekan8"
+      base_url: "https://api.ekan8.com/v1"
+      api_key_env: "OMBRE_GATEWAY_EKAN8_API_KEY"
+      default_model: "K-claude-opus-4-6"
+      models:
+        - "K-claude-opus-4-5"
+        - "K-claude-opus-4-6"
+        - "K-claude-opus-4-8"
   head_recent_hours: 72
   dynamic_top_k: 10
   inject_max_cards: 2
